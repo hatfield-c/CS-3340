@@ -10,10 +10,22 @@
 	li $v0, 4
 	syscall
 
-	#todo: Capture user input for two ints
-	li $t1, 3
-	li $t2, 5
+	#method: Get first integer
+	li $v0 5
+	syscall
+	move $t1, $v0
 	
+	#method: prints integer two message
+	la $a0, str_enterInt2
+	li $v0, 4
+	syscall
+	
+	#method: Get second integer
+	li $v0 5
+	syscall
+	move $t2, $v0
+	
+	#method: Add first and second integer
 	add $t0, $t1, $t2
 	
 	#todo: Output final answer
@@ -23,3 +35,4 @@
 		
 .data
 	str_welcomeMsg: .asciiz "Welcome! This program will calculate two integer values you enter.\nPlease enter integer one: "
+	str_enterInt2: .asciiz "Pleanse enter integer two: "
