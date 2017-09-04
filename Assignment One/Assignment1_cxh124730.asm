@@ -5,27 +5,27 @@
 # as an output in the console.
 
 .text main:
-	#method: Prints the welcome message onto the screen
+	#output: Prints str_welcomeMsg
 	la $a0, str_welcomeMsg
 	li $v0, 4
 	syscall
 
-	#method: Get first integer
+	#input: Get integer from user and stores it in $t1
 	li $v0 5
 	syscall
 	move $t1, $v0
 	
-	#method: prints integer two message
+	#output: Prints str_enterInt2
 	la $a0, str_enterInt2
 	li $v0, 4
 	syscall
 	
-	#method: Get second integer
+	#input: Get integer from user and stores it in $t2
 	li $v0 5
 	syscall
 	move $t2, $v0
 	
-	#method: Add first and second integer
+	#method: Add $t1 and $t2 and store in $t0
 	add $t0, $t1, $t2
 	
 	#todo: Output final answer
