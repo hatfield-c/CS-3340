@@ -10,7 +10,7 @@
 	li $v0, 4
 	syscall
 
-	#input: Get integer from user and stores it in $t1
+	#input: Get integer from user and stores it in A
 	li $v0 5
 	syscall
 	sw $v0, A
@@ -20,7 +20,7 @@
 	li $v0, 4
 	syscall
 	
-	#input: Get integer from user and stores it in $t2
+	#input: Get integer from user and stores it in B
 	li $v0 5
 	syscall
 	sw $v0, B
@@ -42,6 +42,7 @@
 	li $v0, 1
 	syscall
 	
+	#output: Prints newline
 	la $a0, newLine
 	li $v0, 4
 	syscall
