@@ -13,7 +13,7 @@
 	#input: Get integer from user and stores it in $t1
 	li $v0 5
 	syscall
-	move $t1, $v0
+	sw $v0, A
 	
 	#output: Prints str_enterInt2
 	la $a0, str_enterInt2
@@ -23,16 +23,26 @@
 	#input: Get integer from user and stores it in $t2
 	li $v0 5
 	syscall
-	move $t2, $v0
+	sw $v0, B
 	
-	#method: Add $t1 and $t2 and store in $t0
+	#method: Loads A & B into $1 & $t2
+	lw $t1, A
+	lw $t2, B
+	
+	#method: Adds $t1 and $t2, then stores it's value in S
 	add $t0, $t1, $t2
+	sw $t0, S
 	
 	#todo: Output final answer
 
+	#method: exits the program
 	li $v0 10,
 	syscall
 		
 .data
-	str_welcomeMsg: .asciiz "Welcome! This program will calculate two integer values you enter.\nPlease enter integer one: "
-	str_enterInt2: .asciiz "Pleanse enter integer two: "
+	str_welcomeMsg: 	.asciiz 	"Welcome! This program will calculate two integer values you enter.\nPlease enter integer one: "
+	str_enterInt2: 		.asciiz 	"Pleanse enter integer two: "
+	str_theSum: 		.asciiz 	"\nThe sum of A and B (A + B) is: "
+	A:			.word		0
+	B:			.word		0
+	S:			.word		0
