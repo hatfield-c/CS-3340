@@ -33,7 +33,18 @@
 	add $t0, $t1, $t2
 	sw $t0, S
 	
-	#todo: Output final answer
+	#output: Prints the sum of A & B from S.
+	la $a0, str_theSum
+	li $v0, 4
+	syscall
+	
+	lw $a0, S
+	li $v0, 1
+	syscall
+	
+	la $a0, newLine
+	li $v0, 4
+	syscall
 
 	#method: exits the program
 	li $v0 10,
@@ -43,6 +54,7 @@
 	str_welcomeMsg: 	.asciiz 	"Welcome! This program will calculate two integer values you enter.\nPlease enter integer one: "
 	str_enterInt2: 		.asciiz 	"Pleanse enter integer two: "
 	str_theSum: 		.asciiz 	"\nThe sum of A and B (A + B) is: "
+	newLine:		.asciiz 	"\n"
 	A:			.word		0
 	B:			.word		0
 	S:			.word		0
