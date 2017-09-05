@@ -51,8 +51,8 @@
 	syscall
 		
 .data
-	str_welcomeMsg: 	.asciiz 	"Welcome! This program will calculate two integer values you enter.\nPlease enter integer one: "
-	str_enterInt2: 		.asciiz 	"Please enter integer two: "
+	str_welcomeMsg: 	.asciiz 	"Welcome! This program will calculate two integer values that you enter.\nPlease enter integer A: "
+	str_enterInt2: 		.asciiz 	"Please enter integer B: "
 	str_theSum: 		.asciiz 	"\nThe sum of A and B (A + B) is: "
 	newLine:		.asciiz 	"\n"
 	A:			.word		0
