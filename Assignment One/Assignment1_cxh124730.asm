@@ -52,7 +52,7 @@
 		
 .data
 	str_welcomeMsg: 	.asciiz 	"Welcome! This program will calculate two integer values you enter.\nPlease enter integer one: "
-	str_enterInt2: 		.asciiz 	"Pleanse enter integer two: "
+	str_enterInt2: 		.asciiz 	"Please enter integer two: "
 	str_theSum: 		.asciiz 	"\nThe sum of A and B (A + B) is: "
 	newLine:		.asciiz 	"\n"
 	A:			.word		0
