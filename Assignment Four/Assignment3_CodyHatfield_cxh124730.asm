@@ -10,6 +10,8 @@
 	str_r_msg:		.asciiz		"\nSum of digits (recursive)    : "
 	str_newLine:		.asciiz		"\n"
 	zip:			.word		1
+	A:			.word		0
+	B:			.word		0
 
 .text main:
 
@@ -34,6 +36,7 @@
 	
 	#output: output the nonrecursive sum
 	move $t0, $v0
+	sw $t0, B
 	
 	la $a0, str_nr_msg # print the nonrecursive message
 	li $v0, 4
@@ -51,6 +54,7 @@
 	
 	#output: output the recursive sum
 	move $t0, $v0
+	sw $t0, A
 	
 	la $a0, str_r_msg # print the recursive message
 	li $v0, 4
