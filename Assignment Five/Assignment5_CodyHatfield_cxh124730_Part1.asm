@@ -10,6 +10,9 @@
 	str_conversionRate:	.asciiz		"Please enter the desired conversion rate: "
 	str_UsdAmount:		.asciiz		"Please enter the amount of USD to convert to Yen: "
 	str_UsdToYenConverted:	.asciiz		"The value in Yen of the entered USD amount is: "
+	str_YenAmount:		.asciiz		"Please enter the amount of Yen to convert to USD: "
+	str_YenToUsdConverted:	.asciiz		"The value in USD of the entered Yen amount is: "
+	str_YenChange:		.asciiz		"\nWith Yen change leftover of: "
 	str_newLine:		.asciiz		"\n"
 	int_conversionRate:	.word		115
 
@@ -54,9 +57,6 @@ setRate:
 	#method: Store the return address in the stack
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
-	
-	#method: Clear the command line screen
-	jal clearScreen
 
 	#output: Output the conversion rate message.
 	la $a0, str_conversionRate
@@ -89,11 +89,11 @@ usdToYen:
 	#input: Get the USD amount from the user
 	li $v0, 5
 	syscall
-	move $t1, $v0
 	
-	#method: Convert the USD amount to Yen
-	lw $t2, int_conversionRate
-	mulo $t0, $t1, $t2
+	#method: Get the converted USD amount in Yen
+	move $a0, $v0
+	jal calculateUsdToYen
+	move $t0, $v0
 	
 	#output: Print the converted amount message
 	la $a0, str_UsdToYenConverted
@@ -116,7 +116,102 @@ yenToUsd:
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 	
+	#output: Print the Yen to USD prompt
+	la $a0, str_YenAmount
+	li $v0, 4
+	syscall
+	
+	#input: Get the Yen amount from the user
+	li $v0, 5
+	syscall
+	
+	#method: Calculate the value in Yen of the USD amount
+	move $a0, $v0
+	jal calculateYenToUsd
+	move $t0, $v0
+	move $t1, $v1
+	
+	#output: Print the converted amount message
+	la $a0, str_YenToUsdConverted
+	li $v0, 4
+	syscall
+	
+	#output: Print the converted amount
+	move $a0, $t0
+	li $v0, 1
+	syscall
+	
+	#output: Print the change message
+	la $a0, str_YenChange
+	li $v0, 4
+	syscall
+	
+	#output: Print the change
+	move $a0, $t1
+	li $v0, 1
+	syscall
+	
 	#method: Load the return address from the stack
+	lw $ra, 0($sp)
+	addi $sp, $sp, 4
+	
+	jr $ra
+
+#subroutine: Calculate the value in USD for a Yen amount in $a0, return in $v0
+calculateYenToUsd:
+	#method: Store the return address in the stack
+	addi $sp, $sp, -4
+	sw $ra, 0($sp)
+	
+	# $s0 : The amount in Yen
+	# $s1 : The current conversion multiplier
+	# $s2 : The change in Yen left over
+	# $t0 : The current Yen in whole USD
+	move $s0, $a0
+	li $s1, 1
+	li $s2, 0
+	
+	begin_conversion:
+		#method: Get the current Yen in whole USD for this iteration
+		lw $t0, int_conversionRate
+		mulo $t0, $s1, $t0
+	
+		#condition: If the current Yen in whole USD is greater than the amount of Yen entered, exit the loop
+		bgt $t0, $s0, end_conversion
+		
+		#method: Add 1 to the Yen to whole USD multiplier, and iterate
+		addi $s1, $s1, 1
+		j begin_conversion
+	
+	end_conversion:
+	#method: Remove one from the Yen to whole USD multiplier, and calculate the whole USD amount
+	addi $s1, $s1, -1
+	lw $t0, int_conversionRate
+	mulo $t0, $s1, $t0
+	
+	#method: Calculate the change based on the whole USD amount
+	sub $s2, $s0, $t0
+	
+	#method: Prepare return values
+	move $v0, $s1
+	move $v1, $s2
+	
+	#method: Load the return address from the stack
+	lw $ra, 0($sp)
+	addi $sp, $sp, 4
+	
+	jr $ra
+
+#subroutine: Calculate the value in Yen for a USD amount in $a0, return in $v0
+calculateUsdToYen:
+	#method: Store the return address and saved registers in the stack
+	addi $sp, $sp, -4
+	sw $ra, 0($sp)
+
+	#method: Convert the USD amount to Yen
+	lw $t1, int_conversionRate
+	mulo $v0, $a0, $t1
+	
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	
