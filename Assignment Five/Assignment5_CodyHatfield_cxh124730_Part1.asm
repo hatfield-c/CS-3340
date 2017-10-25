@@ -1,7 +1,5 @@
-# A program that gets a zip code input
-# from the user, stores it in memory,
-# and sums up its digits via two different
-# functions.
+# A program that converts between
+# Yen & USD
 
 .data
 	
