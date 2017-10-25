@@ -5,18 +5,16 @@
 
 .data
 	
-	str_mainMenu:		.asciiz 	"---------- Main Menu ----------\nWelcome to the Hati YenUSD conversion calculator! Please choose one of the following options:\n"
+	str_mainMenu:		.asciiz 	"\n\n---------- Main Menu ----------\nWelcome to the Hati YenUSD conversion calculator! Please choose one of the following options:\n"
 	str_mainMenuOptions:	.asciiz		"1. Set Conversion Rate\n2. Convert USD to Yen\n3. Convert Yen to USD\n4. Exit Application\n"
 	str_conversionRate:	.asciiz		"Please enter the desired conversion rate: "
+	str_UsdAmount:		.asciiz		"Please enter the amount of USD to convert to Yen: "
+	str_UsdToYenConverted:	.asciiz		"The value in Yen of the entered USD amount is: "
 	str_newLine:		.asciiz		"\n"
 	int_conversionRate:	.word		115
 
 .text 
 main:
-
-	#method: Clear the command line screen
-	jal clearScreen
-
 	#method: Display the main menu and get the menu option from the user
 	jal getMainMenu
 	move $t0, $v0
@@ -32,13 +30,13 @@ main:
 	O1:
 		jal setRate
 		j end_switch
-	#Option 2: Convert Yen to USD
+	#Option 2: Convert USD to Yen
 	O2:
-		jal yenToUsd
-		j end_switch
-	#Option 1: Convert USD to Yen
-	O3:
 		jal usdToYen
+		j end_switch
+	#Option 3: Convert Yen to USD
+	O3:
+		jal yenToUsd
 		j end_switch
 	
 	end_switch:
@@ -78,10 +76,34 @@ setRate:
 	
 	jr $ra
 	
-yenToUsd:
+usdToYen:
 	#method: Store the return address in the stack
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
+	
+	#output: Print the USD to Yen prompt
+	la $a0, str_UsdAmount
+	li $v0, 4
+	syscall
+	
+	#input: Get the USD amount from the user
+	li $v0, 5
+	syscall
+	move $t1, $v0
+	
+	#method: Convert the USD amount to Yen
+	lw $t2, int_conversionRate
+	mulo $t0, $t1, $t2
+	
+	#output: Print the converted amount message
+	la $a0, str_UsdToYenConverted
+	li $v0, 4
+	syscall
+
+	#output: Print the converted amount
+	move $a0, $t0
+	li $v0, 1
+	syscall
 	
 	#method: Load the return address from the stack
 	lw $ra, 0($sp)
@@ -89,7 +111,7 @@ yenToUsd:
 
 	jr $ra
 	
-usdToYen:
+yenToUsd:
 	#method: Store the return address in the stack
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
