@@ -7,7 +7,9 @@
 	
 	str_mainMenu:		.asciiz 	"---------- Main Menu ----------\nWelcome to the Hati YenUSD conversion calculator! Please choose one of the following options:\n"
 	str_mainMenuOptions:	.asciiz		"1. Set Conversion Rate\n2. Convert USD to Yen\n3. Convert Yen to USD\n4. Exit Application\n"
+	str_conversionRate:	.asciiz		"Please enter the desired conversion rate: "
 	str_newLine:		.asciiz		"\n"
+	int_conversionRate:	.word		115
 
 .text 
 main:
@@ -49,28 +51,50 @@ main:
 	li $v0, 10
 	syscall
 	
+#Subroutine: Get the new conversion rate from the user, and store it in int_conversionRate
 setRate:
+	#method: Store the return address in the stack
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 	
+	#method: Clear the command line screen
+	jal clearScreen
+
+	#output: Output the conversion rate message.
+	la $a0, str_conversionRate
+	li $v0, 4
+	syscall
+	
+	#input: Get the conversion rate from the user
+	li $v0, 5
+	syscall
+	
+	#method: Store the conversion rate in memory
+	sw $v0, int_conversionRate
+	
+	#method: Load the return address from the stack
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	
 	jr $ra
 	
 yenToUsd:
+	#method: Store the return address in the stack
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 	
+	#method: Load the return address from the stack
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 
 	jr $ra
 	
 usdToYen:
+	#method: Store the return address in the stack
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 	
+	#method: Load the return address from the stack
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	
